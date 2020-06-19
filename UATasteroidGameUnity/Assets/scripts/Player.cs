@@ -39,4 +39,18 @@ public class Player : MonoBehaviour
     {
         
     }
+    private void OnCollisionEnter2D(Collision2D otherObject)
+    {
+        //if the player runs into something they should die
+        Die();
+    }
+    void Die()
+    {
+        Destroy(this.gameObject);
+    }
+    private void OnDestroy()
+    {
+        GameManager.instance.player = null;
+    }
 }
+
