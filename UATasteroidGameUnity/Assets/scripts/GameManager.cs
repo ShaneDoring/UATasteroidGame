@@ -10,12 +10,15 @@ public class GameManager : MonoBehaviour
 
     public int score;
 
+    public List<GameObject> enemyList;
+
     private void Awake()
     {
         if (instance == null)
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
+            enemyList = new List<GameObject>();
         }
         else
         {
@@ -23,5 +26,6 @@ public class GameManager : MonoBehaviour
             Debug.LogError("[Game manager attempted to make a second game manager: ]" + this.gameObject.name);
         }
     }
+ 
 }
   
