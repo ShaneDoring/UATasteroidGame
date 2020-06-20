@@ -58,6 +58,7 @@ public class Player : MonoBehaviour
     private void OnDestroy()
     {
         GameManager.instance.player = null;
+      
     }
 }
 

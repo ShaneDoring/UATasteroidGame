@@ -1,37 +1,43 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Net.Sockets;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-public class Asteroid : MonoBehaviour
+public class EnemyShip : MonoBehaviour
 {
-    private Vector3 directionToMove;
     private Vector3 targetPosition;
+    public float rotationSpeed;
     public float moveSpeed;
-
-    private void Start()
+    private Vector3 directionToMove;
+    // Start is called before the first frame update
+    // on start enemy ship will be added to the enemy list to be spawned in at random spawn point and will heat seek the player
+    void Start()
     {
-        //at start designates enemies into the enemy list and makes the asteroid fly towards the player at the direction of the player when it spawns
         GameManager.instance.enemyList.Add(this.gameObject);
         directionToMove = GameManager.instance.player.transform.position - transform.position;
         directionToMove.Normalize();
         targetPosition = GameManager.instance.player.transform.position;
     }
-    private void Update()
+
+    // Update is called once per frame
+    //on update the enemy ship will redirect itself toward the player
+    void Update()
     {
-         transform.position += directionToMove* moveSpeed * Time.deltaTime;
-        // transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
-       // transform.position = Vector3.Lerp(transform.position, targetPosition, 0.1f);
+        targetPosition = GameManager.instance.player.transform.position;
+        Vector3 directionToLook = targetPosition - transform.position;
+        transform.up = directionToLook;
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+        //Error to fix
+        //transform.rotation= Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(transform.right, transform.forward), rotationSpeed * Time.deltaTime);
     }
 
-    //removes the enemy from the enemy list when destoyed
+    //removes the enemy ship from the list when it is destroyed
     private void OnDestroy()
     {
         GameManager.instance.enemyList.Remove(this.gameObject);
     }
 
-    //when the object collides with the bullet it will be destoyed 
+
     private void OnCollisionEnter2D(Collision2D otherObject)
     {
         Debug.Log("Collided with something");
@@ -45,22 +51,13 @@ public class Asteroid : MonoBehaviour
         {
             Die();
         }
-      
-       
+
+
     }
-    
 
 
     void Die()
     {
         Destroy(this.gameObject);
     }
-    /* private void OnCollisionExit2D(Collision2D otherObject)
-     {
-         Debug.Log("Stopped Collideing with something");
-     }
-     private void OnCollisionStay2D(Collision2D otherObject)
-     {
-         Debug.Log("Am Collidding with something");
-     }*/
 }
